@@ -18,6 +18,7 @@ class NavVC: UINavigationController {
         
         mainVC.delegate = self
         studyVC.delegate = self
+        
     }
 }
 
