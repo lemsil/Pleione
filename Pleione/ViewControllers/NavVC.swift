@@ -9,8 +9,9 @@ import UIKit
 
 class NavVC: UINavigationController {
     
-    let mainVC = MainVC()
-    let studyVC = StudyVC()
+    let studyContainerVC = StudyContainerVC()
+    let mainVC      = MainVC()
+    let studyVC     = StudyVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,7 +27,7 @@ class NavVC: UINavigationController {
 extension NavVC: MainVCDelegate {
     func didPressStudyButton() {
         print("study button pressed")
-        pushViewController(studyVC, animated: true)
+        pushViewController(studyContainerVC, animated: true)
     }
 }
 

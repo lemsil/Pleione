@@ -13,9 +13,9 @@ protocol StudyVCDelegate: AnyObject {
 
 class StudyVC: UIViewController {
     
-    let cardVC = CardVC()
-    let returnButton = VVButton()
-    let cardContainerView = UIView()
+    let cardVC              = CardVC()
+    let returnButton        = VVButton()
+    let cardContainerView   = UIView()
     
     weak var delegate: StudyVCDelegate?
     
@@ -67,7 +67,7 @@ class StudyVC: UIViewController {
         ])
             
         add(childVC: cardVC, to: self.cardContainerView)
-        cardVC.configureButton(with: self.cardContainerView)
+//        cardVC.configureButton(with: self.cardContainerView)
     }
     
     
