@@ -5,8 +5,13 @@
 //  Created by Leroy van Vliet on 22/10/2022.
 //
 
+import Foundation
+
 struct Card {
-    var question:   String
-    var answer:     String
-    var familiarity: Int
+    var question:       String
+    var answer:         String
+    var familiarity:    Int
+//    var studied:        Bool
+//    var ready:          Bool
+//    var cooldown:       Date
 }

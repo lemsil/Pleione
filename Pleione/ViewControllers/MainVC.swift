@@ -14,6 +14,9 @@ protocol MainVCDelegate: AnyObject {
 class MainVC: UIViewController {
 
     let studyButton = VVButton()
+    let compareButton = VVButton()
+    var date1       = Date()
+    var date2       = Date()
     
     weak var delegate: MainVCDelegate?
     
@@ -23,9 +26,16 @@ class MainVC: UIViewController {
         
         view.backgroundColor = .systemGray
         
+        setDates()
         configureStudyButton()
+        configureCompareButton()
     }
 
+    func setDates() {
+        date1 = Date()
+        date2 = Date(timeIntervalSinceNow: 5)
+    }
+    
     func configureStudyButton() {
         view.addSubview(studyButton)
         
@@ -41,6 +51,25 @@ class MainVC: UIViewController {
             studyButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
+    
+    
+    func configureCompareButton() {
+        view.addSubview(compareButton)
+        
+        let padding: CGFloat = 60
+        
+        compareButton.setTitle("compare times", for: .normal)
+        compareButton.addTarget(self, action: #selector(compareButtonClicked), for: .touchUpInside)
+        
+        NSLayoutConstraint.activate([
+        
+            compareButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            compareButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            compareButton.topAnchor.constraint(equalTo: studyButton.bottomAnchor, constant: padding),
+            compareButton.heightAnchor.constraint(equalToConstant: 60)
+            
+        ])
+    }
 }
 
 
@@ -48,5 +77,21 @@ extension MainVC {
     @objc func studyButtonClicked() {
         print("study button was clicked")
         delegate?.didPressStudyButton()
+    }
+    
+    @objc func compareButtonClicked() {
+        print("comparea buton clicked")
+        print("\(Date() > date2)")
+    }
+}
+
+
+extension MainVC {
+    func initializeDates() {
+        
+    }
+    
+    func compareDates() {
+        
     }
 }
