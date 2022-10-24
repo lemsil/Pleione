@@ -15,10 +15,13 @@ class StudyContainerVC: UIViewController {
     let questionLabel   = VVLabel()
     let answerLabel     = VVLabel()
     let doneLabel       = VVLabel()
+    let readyLabel      = VVLabel()
+    let checkButton     = VVButton()
     let answerButton    = VVButton()
     let againButton     = VVButton()
     let successButton   = VVButton()
     let stackView       = UIStackView()
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,21 +43,36 @@ class StudyContainerVC: UIViewController {
         view.addSubview(againButton)
         view.addSubview(successButton)
         view.addSubview(stackView)
+        view.addSubview(readyLabel)
+        view.addSubview(checkButton)
         
-        againButton.setTitle("again", for: .normal)
-        successButton.setTitle("correct", for: .normal)
-        againButton.backgroundColor = .systemPurple
-        successButton.backgroundColor = .systemBlue
-        
+        // Labels
         countLabel.text         = "5"
         doneLabel.text          = "You finished studying for now!"
         doneLabel.textAlignment = .center
-        answerButton.setTitle("show answer", for: .normal)
-        answerButton.addTarget(self, action: #selector(showAnswerButtonPressed), for: .touchUpInside)
-//        answerButton.isUserInteractionEnabled = false
-        
         doneLabel.alpha         = 0
         answerLabel.alpha       = 0
+        answerButton.alpha      = 1
+        
+        stackView.isHidden = true
+        
+        // Check button
+        checkButton.setTitle("check readiness", for: .normal)
+        checkButton.addTarget(self, action: #selector(checkButtonPressed), for: .touchUpInside)
+        
+        // Answer button
+        answerButton.setTitle("show answer", for: .normal)
+        answerButton.addTarget(self, action: #selector(showAnswerButtonPressed), for: .touchUpInside)
+        
+        // Again button
+        againButton.setTitle("again", for: .normal)
+        againButton.backgroundColor = .systemPurple
+        againButton.addTarget(self, action: #selector(againButtonPressed), for: .touchUpInside)
+        
+        // Success button
+        successButton.setTitle("correct", for: .normal)
+        successButton.backgroundColor = .systemBlue
+        successButton.addTarget(self, action: #selector(successButtonPressed), for: .touchUpInside)
     }
     
     func setQuestionAndAnswerText() {
@@ -62,20 +80,11 @@ class StudyContainerVC: UIViewController {
         answerLabel.text    = Data.shared.cards[cardIndex].answer
     }
     
-    @objc func showAnswerButtonPressed() {
-        DispatchQueue.main.async {
-            self.answerLabel.alpha = 1
-            self.answerButton.setTitle("next card", for: .normal)
-            self.answerButton.removeTarget(nil, action: nil, for: .allEvents)
-            self.answerButton.addTarget(self, action: #selector(self.showNextCardButtonPressed), for: .touchUpInside)
-        }
-    }
     
     func configureStackView() {
         stackView.axis              = .horizontal
         stackView.distribution      = .fillEqually
         stackView.spacing           = 10
-//        stackView.backgroundColor   = .systemRed
         
         stackView.addArrangedSubview(againButton)
         stackView.addArrangedSubview(successButton)
@@ -83,25 +92,6 @@ class StudyContainerVC: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    @objc func showNextCardButtonPressed() {
-        DispatchQueue.main.async {
-           
-            print("next card button pressed")
-            
-            if (self.cardIndex < Data.shared.cards.count - 1) {
-                print(self.cardIndex)
-                self.answerLabel.alpha = 0
-                self.answerButton.setTitle("show answer", for: .normal)
-                self.answerButton.removeTarget(nil, action: nil, for: .allEvents)
-                self.answerButton.addTarget(self, action: #selector(self.showAnswerButtonPressed), for: .touchUpInside)
-                self.cardIndex += 1
-                self.setQuestionAndAnswerText()
-            } else if (self.cardIndex == Data.shared.cards.count - 1) {
-                print(self.cardIndex)
-                self.showFinishedStudyingMessage()
-            }
-        }
-    }
     
     func showFinishedStudyingMessage() {
         DispatchQueue.main.async {
@@ -109,13 +99,74 @@ class StudyContainerVC: UIViewController {
             self.questionLabel.alpha    = 0
             self.answerLabel.alpha      = 0
             self.answerButton.alpha     = 0
-            
             self.doneLabel.alpha        = 1
         }
     }
 }
 
+// MARK: Button presses
+extension StudyContainerVC {
+    
+    @objc func showAnswerButtonPressed() {
+        DispatchQueue.main.async {
+            
+            self.answerButton.isHidden   = true
+            self.stackView.isHidden      = false
+            
+            self.answerLabel.alpha = 1
+        }
+    }
+    
+    @objc func againButtonPressed() {
+        
+        print("again button pressed")
+        
+        self.answerButton.isHidden   = false
+        self.stackView.isHidden      = true
+        
+        Data.shared.cards[cardIndex].ready          = true
+        Data.shared.cards[cardIndex].familiarity    = 0
+        Data.shared.cards[cardIndex].cooldown       = nil
+        
+        moveToNextCard()
+    }
+        
+    @objc func successButtonPressed() {
+        
+        print("success button pressed")
+        
+        self.answerButton.isHidden   = false
+        self.stackView.isHidden      = true
+        
+        Data.shared.cards[cardIndex].ready          = false
+        Data.shared.cards[cardIndex].familiarity    += 1
+        Data.shared.cards[cardIndex].cooldown       = Date(timeIntervalSinceNow: TimeInterval(3 * Data.shared.cards[cardIndex].familiarity))
+        
+        moveToNextCard()
+    }
+    
+    @objc func checkButtonPressed() {
+        print("check button pressed")
+    }
+    
+    func moveToNextCard() {
+        DispatchQueue.main.async {
+            
+            self.answerButton.isHidden   = false
+            self.stackView.isHidden      = true
+            
+            if (self.cardIndex < Data.shared.cards.count - 1) {
+                self.answerLabel.alpha = 0
+                self.cardIndex += 1
+                self.setQuestionAndAnswerText()
+            } else if (self.cardIndex == Data.shared.cards.count - 1) {
+                self.showFinishedStudyingMessage()
+            }
+        }
+    }
+}
 
+// MARK: Constraints
 extension StudyContainerVC {
     func activateConstraints() {
         NSLayoutConstraint.activate([
@@ -144,10 +195,15 @@ extension StudyContainerVC {
             doneLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
             doneLabel.heightAnchor.constraint(equalToConstant: 200),
             
-            stackView.topAnchor.constraint(equalTo: answerLabel.bottomAnchor, constant: 50),
+            stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
             stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
-            stackView.heightAnchor.constraint(equalToConstant: 50)
+            stackView.heightAnchor.constraint(equalToConstant: 50),
+            
+            checkButton.bottomAnchor.constraint(equalTo: answerButton.topAnchor, constant: -50),
+            checkButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
+            checkButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+            checkButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
 }

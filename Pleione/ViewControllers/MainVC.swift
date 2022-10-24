@@ -75,12 +75,10 @@ class MainVC: UIViewController {
 
 extension MainVC {
     @objc func studyButtonClicked() {
-        print("study button was clicked")
         delegate?.didPressStudyButton()
     }
     
     @objc func compareButtonClicked() {
-        print("comparea buton clicked")
         print("\(Date() > date2)")
     }
 }

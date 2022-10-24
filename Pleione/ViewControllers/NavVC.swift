@@ -26,7 +26,6 @@ class NavVC: UINavigationController {
 
 extension NavVC: MainVCDelegate {
     func didPressStudyButton() {
-        print("study button pressed")
         pushViewController(studyContainerVC, animated: true)
     }
 }
@@ -34,7 +33,6 @@ extension NavVC: MainVCDelegate {
 
 extension NavVC: StudyVCDelegate {
     func returnButtonPressed() {
-        print("return button pressed")
         popViewController(animated: true)
     }
 }
