@@ -7,10 +7,13 @@
 
 import UIKit
 
-class StudyContainerVC: UIViewController {
+protocol StudyContainerVCDelegate: AnyObject {
+    func resetStudyCards()
+}
+
+class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
     
     var cardIndex       = 0
-    
     let countLabel      = VVLabel()
     let questionLabel   = VVLabel()
     let answerLabel     = VVLabel()
@@ -20,22 +23,31 @@ class StudyContainerVC: UIViewController {
     let againButton     = VVButton()
     let successButton   = VVButton()
     let stackView       = UIStackView()
+    let mainVC          = MainVC()
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .systemGray
         
         configureItems()
-        configureStackView()
         activateConstraints()
         setQuestionAndAnswerText()
+        
+        mainVC.studyDelegate = self
     }
     
     func setQuestionAndAnswerText() {
         questionLabel.text  = Data.shared.readyCards[cardIndex].question
         answerLabel.text    = Data.shared.readyCards[cardIndex].answer
+    }
+    
+    func resetCardViews() {
+        questionLabel.text  = Data.shared.readyCards[cardIndex].question
+        answerLabel.text    = Data.shared.readyCards[cardIndex].answer
+        doneLabel.alpha     = 0
+        countLabel.alpha    = 1
+        answerButton.alpha  = 1
     }
     
     func showFinishedStudyingMessage() {
@@ -53,13 +65,20 @@ class StudyContainerVC: UIViewController {
             self.answerButton.isHidden   = false
             self.stackView.isHidden      = true
             
-            if (self.cardIndex < Data.shared.readyCards.count - 1) {
+            if Data.shared.readyCards.count > 0 {
                 self.answerLabel.alpha = 0
-                self.cardIndex += 1
                 self.setQuestionAndAnswerText()
-            } else if (self.cardIndex == Data.shared.readyCards.count - 1) {
+            } else {
                 self.showFinishedStudyingMessage()
             }
+            
+//            if (self.cardIndex < Data.shared.readyCards.count - 1) {
+//                self.answerLabel.alpha = 0
+////                self.cardIndex += 1
+//                self.setQuestionAndAnswerText()
+//            } else if (self.cardIndex == Data.shared.readyCards.count - 1) {
+//                self.showFinishedStudyingMessage()
+//            }
         }
     }
 }
@@ -83,33 +102,30 @@ extension StudyContainerVC {
         doneLabel.textAlignment = .center
         doneLabel.alpha         = 0
         answerLabel.alpha       = 0
-        answerButton.alpha      = 1
-        
-        stackView.isHidden = true
         
         // Answer button
         answerButton.setTitle("show answer", for: .normal)
         answerButton.addTarget(self, action: #selector(showAnswerButtonPressed), for: .touchUpInside)
+        answerButton.alpha      = 1
         
         // Again button
         againButton.setTitle("again", for: .normal)
-        againButton.backgroundColor = .systemPurple
         againButton.addTarget(self, action: #selector(againButtonPressed), for: .touchUpInside)
+        againButton.backgroundColor = .systemPurple
         
         // Success button
         successButton.setTitle("correct", for: .normal)
-        successButton.backgroundColor = .systemBlue
         successButton.addTarget(self, action: #selector(successButtonPressed), for: .touchUpInside)
-    }
-    
-    func configureStackView() {
-        stackView.axis              = .horizontal
-        stackView.distribution      = .fillEqually
-        stackView.spacing           = 10
+        successButton.backgroundColor = .systemBlue
+        
+        // Stack view
+        stackView.axis          = .horizontal
+        stackView.distribution  = .fillEqually
+        stackView.spacing       = 10
+        stackView.isHidden      = true
         
         stackView.addArrangedSubview(againButton)
         stackView.addArrangedSubview(successButton)
-        
         stackView.translatesAutoresizingMaskIntoConstraints = false
     }
 }
@@ -132,6 +148,9 @@ extension StudyContainerVC {
         Data.shared.readyCards[cardIndex].familiarity    = 0
         Data.shared.readyCards[cardIndex].cooldown       = nil
         
+        Data.shared.readyCards.append(Data.shared.readyCards[cardIndex])
+        Data.shared.readyCards.remove(at: cardIndex)
+        
         moveToNextCard()
     }
         
@@ -144,8 +163,16 @@ extension StudyContainerVC {
         
         Data.shared.cards.append(Data.shared.readyCards[cardIndex])
         Data.shared.readyCards.remove(at: cardIndex)
+//        cardIndex -= 1
         
         moveToNextCard()
+    }
+}
+
+// MARK: Protocols ---
+extension StudyContainerVC {
+    func resetStudyCards() {
+        print("butt")
     }
 }
 

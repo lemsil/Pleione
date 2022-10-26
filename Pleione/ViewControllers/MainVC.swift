@@ -18,17 +18,21 @@ class MainVC: UIViewController {
     let readyLabel  = VVLabel()
     let studyButton = VVButton()
     let checkButton = VVButton()
+    let studyContainerVC = StudyContainerVC()
     
     weak var delegate: MainVCDelegate?
+    weak var studyDelegate: StudyContainerVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemGray
         
+        checkReadyCards()
         configureReadyLabel()
         configureStudyButton()
         configureCheckButton()
     }
+    
     
     func checkReadyCards() {
         var indexArray: [Int] = []
@@ -39,6 +43,7 @@ class MainVC: UIViewController {
                     Data.shared.cards[index].cooldown = nil
                 }
             }
+            
             if card.cooldown == nil && card.studied != true {
                 Data.shared.readyCards.append(Data.shared.cards[index])
                 indexArray.append(index)
@@ -50,10 +55,12 @@ class MainVC: UIViewController {
             Data.shared.cards.remove(at: index)
         }
         readyLabel.text = "\(Data.shared.readyCards.count)"
+        
+        
     }
 }
 
-// MARK: Buttons ---
+// MARK: Buttons presses ---
 extension MainVC {
     @objc func studyButtonClicked() {
         delegate?.didPressStudyButton()
@@ -61,6 +68,8 @@ extension MainVC {
     
     @objc func checkButtonClicked() {
         checkReadyCards()
+        
+        studyDelegate?.resetStudyCards()
     }
 }
 
