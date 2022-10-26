@@ -12,38 +12,101 @@ protocol MainVCDelegate: AnyObject {
 }
 
 class MainVC: UIViewController {
-
+    
+    let padding: CGFloat = 60
+    
+    let readyLabel  = VVLabel()
     let studyButton = VVButton()
-    let compareButton = VVButton()
-    var date1       = Date()
-    var date2       = Date()
+    let checkButton = VVButton()
     
     weak var delegate: MainVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
         view.backgroundColor = .systemGray
         
-        setDates()
+        configureReadyLabel()
         configureStudyButton()
-        configureCompareButton()
+        configureCheckButton()
     }
+    
+    func checkReadyCards() {
+        var indexArray: [Int] = []
+        
+        for (index, card) in Data.shared.cards.enumerated() {
+            if card.cooldown != nil {
+                if Date() > card.cooldown! {
+                    Data.shared.cards[index].cooldown = nil
+                }
+            }
+            if card.cooldown == nil && card.studied != true {
+                Data.shared.readyCards.append(Data.shared.cards[index])
+                indexArray.append(index)
+            }
+        }
+        
+        indexArray = indexArray.reversed()
+        for index in indexArray {
+            Data.shared.cards.remove(at: index)
+        }
+        readyLabel.text = "\(Data.shared.readyCards.count)"
+    }
+}
 
-    func setDates() {
-        date1 = Date()
-        date2 = Date(timeIntervalSinceNow: 5)
+// MARK: Buttons ---
+extension MainVC {
+    @objc func studyButtonClicked() {
+        delegate?.didPressStudyButton()
+    }
+    
+    @objc func checkButtonClicked() {
+        checkReadyCards()
+    }
+}
+
+// MARK: Configuration ---
+extension MainVC {
+    func configureReadyLabel() {
+        view.addSubview(readyLabel)
+        
+        readyLabel.backgroundColor = .systemPurple
+        
+        readyLabelConstraints()
+        checkReadyCards()
     }
     
     func configureStudyButton() {
         view.addSubview(studyButton)
         
-        let padding: CGFloat = 60
-        
         studyButton.setTitle("Begin studying", for: .normal)
         studyButton.addTarget(self, action: #selector(studyButtonClicked), for: .touchUpInside)
         
+        studyButtonConstraints()
+    }
+    
+    func configureCheckButton() {
+        view.addSubview(checkButton)
+        
+        checkButton.setTitle("check readiness", for: .normal)
+        checkButton.addTarget(self, action: #selector(checkButtonClicked), for: .touchUpInside)
+        checkButton.backgroundColor = .systemPurple
+        
+        checkButtonConstraints()
+    }
+}
+
+// MARK: Constraints ---
+extension MainVC {
+    func readyLabelConstraints() {
+        NSLayoutConstraint.activate([
+            readyLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            readyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            readyLabel.heightAnchor.constraint(equalToConstant: 50),
+            readyLabel.widthAnchor.constraint(equalToConstant: 100)
+        ])
+    }
+    
+    func studyButtonConstraints() {
         NSLayoutConstraint.activate([
             studyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
             studyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
@@ -52,44 +115,12 @@ class MainVC: UIViewController {
         ])
     }
     
-    
-    func configureCompareButton() {
-        view.addSubview(compareButton)
-        
-        let padding: CGFloat = 60
-        
-        compareButton.setTitle("compare times", for: .normal)
-        compareButton.addTarget(self, action: #selector(compareButtonClicked), for: .touchUpInside)
-        
+    func checkButtonConstraints() {
         NSLayoutConstraint.activate([
-        
-            compareButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            compareButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            compareButton.topAnchor.constraint(equalTo: studyButton.bottomAnchor, constant: padding),
-            compareButton.heightAnchor.constraint(equalToConstant: 60)
-            
+            checkButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            checkButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            checkButton.topAnchor.constraint(equalTo: studyButton.bottomAnchor, constant: padding),
+            checkButton.heightAnchor.constraint(equalToConstant: 60)
         ])
-    }
-}
-
-
-extension MainVC {
-    @objc func studyButtonClicked() {
-        delegate?.didPressStudyButton()
-    }
-    
-    @objc func compareButtonClicked() {
-        print("\(Date() > date2)")
-    }
-}
-
-
-extension MainVC {
-    func initializeDates() {
-        
-    }
-    
-    func compareDates() {
-        
     }
 }
