@@ -17,8 +17,8 @@ class MainVC: UIViewController {
     
     let readyLabel  = VVLabel()
     let studyButton = VVButton()
-    let checkButton = VVButton()
-    let studyContainerVC = StudyContainerVC()
+//    let checkButton = VVButton()
+//    let studyContainerVC = StudyContainerVC()
     
     weak var delegate: MainVCDelegate?
     weak var studyDelegate: StudyContainerVCDelegate?
@@ -30,9 +30,14 @@ class MainVC: UIViewController {
         checkReadyCards()
         configureReadyLabel()
         configureStudyButton()
-        configureCheckButton()
+//        configureCheckButton()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        let timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
+    }
     
     func checkReadyCards() {
         var indexArray: [Int] = []
@@ -58,6 +63,10 @@ class MainVC: UIViewController {
         
         
     }
+    
+    @objc func handleTimer() {
+        checkReadyCards()
+    }
 }
 
 // MARK: Buttons presses ---
@@ -68,7 +77,6 @@ extension MainVC {
     
     @objc func checkButtonClicked() {
         checkReadyCards()
-        
         studyDelegate?.resetStudyCards()
     }
 }
@@ -78,7 +86,8 @@ extension MainVC {
     func configureReadyLabel() {
         view.addSubview(readyLabel)
         
-        readyLabel.backgroundColor = .systemPurple
+//        readyLabel.backgroundColor = .systemGray
+        readyLabel.font = .systemFont(ofSize: 50)
         
         readyLabelConstraints()
         checkReadyCards()
@@ -93,15 +102,15 @@ extension MainVC {
         studyButtonConstraints()
     }
     
-    func configureCheckButton() {
-        view.addSubview(checkButton)
-        
-        checkButton.setTitle("check readiness", for: .normal)
-        checkButton.addTarget(self, action: #selector(checkButtonClicked), for: .touchUpInside)
-        checkButton.backgroundColor = .systemPurple
-        
-        checkButtonConstraints()
-    }
+//    func configureCheckButton() {
+//        view.addSubview(checkButton)
+//
+//        checkButton.setTitle("check readiness", for: .normal)
+//        checkButton.addTarget(self, action: #selector(checkButtonClicked), for: .touchUpInside)
+//        checkButton.backgroundColor = .systemPurple
+//
+//        checkButtonConstraints()
+//    }
 }
 
 // MARK: Constraints ---
@@ -124,12 +133,12 @@ extension MainVC {
         ])
     }
     
-    func checkButtonConstraints() {
-        NSLayoutConstraint.activate([
-            checkButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            checkButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            checkButton.topAnchor.constraint(equalTo: studyButton.bottomAnchor, constant: padding),
-            checkButton.heightAnchor.constraint(equalToConstant: 60)
-        ])
-    }
+//    func checkButtonConstraints() {
+//        NSLayoutConstraint.activate([
+//            checkButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+//            checkButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+//            checkButton.topAnchor.constraint(equalTo: studyButton.bottomAnchor, constant: padding),
+//            checkButton.heightAnchor.constraint(equalToConstant: 60)
+//        ])
+//    }
 }

@@ -19,6 +19,8 @@ class NavVC: UINavigationController {
         
         mainVC.delegate = self
         studyVC.delegate = self
+        studyContainerVC.delegate = self
+        mainVC.studyDelegate = self
         
     }
 }
@@ -34,5 +36,14 @@ extension NavVC: MainVCDelegate {
 extension NavVC: StudyVCDelegate {
     func returnButtonPressed() {
         popViewController(animated: true)
+    }
+}
+
+
+extension NavVC: StudyContainerVCDelegate {
+    func resetStudyCards() {
+        print("butt")
+//        studyContainerVC.resetCardViews()
+        
     }
 }

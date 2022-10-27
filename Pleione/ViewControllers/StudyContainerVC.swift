@@ -34,8 +34,17 @@ class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
         activateConstraints()
         setQuestionAndAnswerText()
         
-        mainVC.studyDelegate = self
+//        mainVC.studyDelegate = self
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("view will appear")
+        if Data.shared.readyCards.count > 0 {
+            resetCardViews()
+        }
+    }
+    
+    weak var delegate: StudyContainerVCDelegate?
     
     func setQuestionAndAnswerText() {
         questionLabel.text  = Data.shared.readyCards[cardIndex].question
@@ -45,6 +54,7 @@ class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
     func resetCardViews() {
         questionLabel.text  = Data.shared.readyCards[cardIndex].question
         answerLabel.text    = Data.shared.readyCards[cardIndex].answer
+        questionLabel.alpha = 1
         doneLabel.alpha     = 0
         countLabel.alpha    = 1
         answerButton.alpha  = 1
