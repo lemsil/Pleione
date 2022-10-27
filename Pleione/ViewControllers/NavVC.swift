@@ -9,37 +9,27 @@ import UIKit
 
 class NavVC: UINavigationController {
     
-    let studyContainerVC = StudyContainerVC()
+    let studyVC = StudyVC()
     let mainVC      = MainVC()
-    let studyVC     = StudyVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         pushViewController(mainVC, animated: false)
         
         mainVC.delegate             = self
-        studyVC.delegate            = self
-        studyContainerVC.delegate   = self
+        studyVC.delegate   = self
     }
 }
 
 
 extension NavVC: MainVCDelegate {
     func didPressStudyButton() {
-        // if there are cards, do something here or if there aren't dont do anything
-        pushViewController(studyContainerVC, animated: true)
+        pushViewController(studyVC, animated: true)
     }
 }
 
 
 extension NavVC: StudyVCDelegate {
-    func returnButtonPressed() {
-        popViewController(animated: true)
-    }
-}
-
-
-extension NavVC: StudyContainerVCDelegate {
     func finishedStudying() {
         popViewController(animated: true)
     }

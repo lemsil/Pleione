@@ -11,8 +11,5 @@ struct Card {
     var question:       String
     var answer:         String
     var familiarity:    Int
-    var studied:        Bool
-    var ready:          Bool
-    var checked:        Bool    = false
     var cooldown:       Date?
 }

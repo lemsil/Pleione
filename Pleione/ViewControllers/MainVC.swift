@@ -30,14 +30,10 @@ class MainVC: UIViewController {
         configureStudyButton()
     }
     
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//
-//    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         checkReadyCards()
-        let timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
+        let _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
     }
     
     func checkReadyCards() {
@@ -50,7 +46,7 @@ class MainVC: UIViewController {
                 }
             }
             
-            if card.cooldown == nil && card.studied != true {
+            if card.cooldown == nil {
                 Data.shared.readyCards.append(Data.shared.cards[index])
                 indexArray.append(index)
             }
