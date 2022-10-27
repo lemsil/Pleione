@@ -9,33 +9,42 @@ import UIKit
 
 protocol MainVCDelegate: AnyObject {
     func didPressStudyButton()
+    func didPressExploreButton()
 }
 
 class MainVC: UIViewController {
-    
-    let padding: CGFloat = 60
+        
     var hasCardsToStudy: Bool?
     
-    let readyLabel  = VVLabel()
-    let studyButton = VVButton()
+    let padding: CGFloat    = 60
+    
+    let stackView           = UIStackView()
+    let readyLabel          = VVLabel()
+    let exploreButton       = VVButton()
+    let studyButton         = VVButton()
     
     weak var delegate: MainVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray
+        view.backgroundColor = .systemGray3
         
         checkReadyCards()
         configureReadyLabel()
+        configureExploreButton()
         configureStudyButton()
+        configureStackView()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         checkReadyCards()
+        
         let _ = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
     }
     
+    // MARK: Logic ---
     func checkReadyCards() {
         var indexArray: [Int] = []
         
@@ -56,13 +65,16 @@ class MainVC: UIViewController {
         for index in indexArray {
             Data.shared.cards.remove(at: index)
         }
+        
         readyLabel.text = "\(Data.shared.readyCards.count)"
         
         if Data.shared.readyCards.count > 0 {
             hasCardsToStudy = true
+            
             toggleButtonState(when: hasCardsToStudy!)
         } else {
             hasCardsToStudy = false
+            
             toggleButtonState(when: hasCardsToStudy!)
         }
     }
@@ -70,12 +82,14 @@ class MainVC: UIViewController {
     func toggleButtonState(when State: Bool) {
         if State {
             studyButton.backgroundColor = .systemGreen
-            studyButton.setTitle("begin studying", for: .normal)
-            studyButton.isEnabled = true
+            studyButton.isEnabled       = true
+            
+            studyButton.setTitle("Study", for: .normal)
         } else {
-            studyButton.backgroundColor = .systemGray4
-            studyButton.setTitle("no cards to study!", for: .disabled)
-            studyButton.isEnabled = false
+            studyButton.backgroundColor = .systemGray
+            studyButton.isEnabled       = false
+            
+            studyButton.setTitle("You're done studying for now!", for: .disabled)
         }
     }
     
@@ -88,6 +102,9 @@ class MainVC: UIViewController {
 extension MainVC {
     @objc func studyButtonClicked() {
         delegate?.didPressStudyButton()
+    }
+    @objc func exploreButtonClicked() {
+        delegate?.didPressExploreButton()
     }
 }
 
@@ -102,13 +119,34 @@ extension MainVC {
         checkReadyCards()
     }
     
+    func configureExploreButton() {
+        view.addSubview(exploreButton)
+        
+        exploreButton.setTitle("Explore", for: .normal)
+        exploreButton.addTarget(self, action: #selector(exploreButtonClicked), for: .touchUpInside)
+    }
+    
     func configureStudyButton() {
         view.addSubview(studyButton)
         
-        studyButton.setTitle("Begin studying", for: .normal)
+        studyButton.setTitle("Study", for: .normal)
         studyButton.addTarget(self, action: #selector(studyButtonClicked), for: .touchUpInside)
         
-        studyButtonConstraints()
+//        studyButtonConstraints()
+    }
+    
+    func configureStackView() {
+        view.addSubview(stackView)
+        
+        stackView.axis          = .vertical
+        stackView.distribution  = .fillEqually
+        stackView.spacing       = 20
+        
+        stackView.addArrangedSubview(exploreButton)
+        stackView.addArrangedSubview(studyButton)
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        stackViewConstraints()
     }
 }
 
@@ -116,19 +154,19 @@ extension MainVC {
 extension MainVC {
     func readyLabelConstraints() {
         NSLayoutConstraint.activate([
-            readyLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 50),
+            readyLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 90),
             readyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             readyLabel.heightAnchor.constraint(equalToConstant: 50),
             readyLabel.widthAnchor.constraint(equalToConstant: 100)
         ])
     }
     
-    func studyButtonConstraints() {
+    func stackViewConstraints() {
         NSLayoutConstraint.activate([
-            studyButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-            studyButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-            studyButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            studyButton.heightAnchor.constraint(equalToConstant: 60)
+            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
+            stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
+            stackView.heightAnchor.constraint(equalToConstant: 140)
         ])
     }
 }

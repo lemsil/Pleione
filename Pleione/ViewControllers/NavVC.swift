@@ -9,15 +9,16 @@ import UIKit
 
 class NavVC: UINavigationController {
     
-    let studyVC = StudyVC()
+    let studyVC     = StudyVC()
     let mainVC      = MainVC()
+    let exploreVC   = ExploreVC()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         pushViewController(mainVC, animated: false)
         
-        mainVC.delegate             = self
-        studyVC.delegate   = self
+        mainVC.delegate     = self
+        studyVC.delegate    = self
     }
 }
 
@@ -25,6 +26,10 @@ class NavVC: UINavigationController {
 extension NavVC: MainVCDelegate {
     func didPressStudyButton() {
         pushViewController(studyVC, animated: true)
+    }
+    
+    func didPressExploreButton() {
+        pushViewController(exploreVC, animated: true)
     }
 }
 

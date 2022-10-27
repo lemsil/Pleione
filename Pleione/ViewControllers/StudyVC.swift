@@ -29,7 +29,7 @@ class StudyVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemGray
+        view.backgroundColor = .systemGray3
         
         configureItems()
         activateConstraints()
@@ -51,20 +51,10 @@ class StudyVC: UIViewController {
         questionLabel.text  = Data.shared.readyCards[cardIndex].question
         answerLabel.text    = Data.shared.readyCards[cardIndex].answer
         questionLabel.alpha = 1
+        answerLabel.alpha   = 0
         doneLabel.alpha     = 0
         countLabel.alpha    = 1
         answerButton.alpha  = 1
-    }
-    
-    func showFinishedStudyingMessage() {
-//        DispatchQueue.main.async {
-//            self.countLabel.alpha       = 0
-//            self.questionLabel.alpha    = 0
-//            self.answerLabel.alpha      = 0
-//            self.answerButton.alpha     = 0
-//            self.doneLabel.alpha        = 1
-//        }
-        self.delegate?.finishedStudying()
     }
     
     func moveToNextCard() {
@@ -73,7 +63,7 @@ class StudyVC: UIViewController {
                 self.answerLabel.alpha = 0
                 self.setQuestionAndAnswerText()
             } else {
-                self.showFinishedStudyingMessage()
+                self.delegate?.finishedStudying()
             }
             
             self.answerButton.isHidden   = false
@@ -157,8 +147,26 @@ extension StudyVC {
         self.answerButton.isHidden   = false
         self.stackView.isHidden      = true
         
-        Data.shared.readyCards[cardIndex].familiarity    += 1
-        Data.shared.readyCards[cardIndex].cooldown       = Date(timeIntervalSinceNow: TimeInterval(3 * Data.shared.readyCards[cardIndex].familiarity))
+        if Data.shared.readyCards[cardIndex].familiarity < 5 {
+            Data.shared.readyCards[cardIndex].familiarity    += 1
+        }
+        
+        switch Data.shared.readyCards[cardIndex].familiarity {
+        case 0:
+            Data.shared.readyCards[cardIndex].cooldown = nil
+        case 1:
+            Data.shared.readyCards[cardIndex].cooldown = Date(timeIntervalSinceNow: 3)
+        case 2:
+            Data.shared.readyCards[cardIndex].cooldown = Date(timeIntervalSinceNow: 6)
+        case 3:
+            Data.shared.readyCards[cardIndex].cooldown = Date(timeIntervalSinceNow: 9)
+        case 4:
+            Data.shared.readyCards[cardIndex].cooldown = Date(timeIntervalSinceNow: 12)
+        case 5:
+            Data.shared.readyCards[cardIndex].cooldown = Date(timeIntervalSinceNow: 15)
+        default:
+            Data.shared.readyCards[cardIndex].cooldown = nil
+        }
         
         Data.shared.cards.append(Data.shared.readyCards[cardIndex])
         Data.shared.readyCards.remove(at: cardIndex)
