@@ -14,14 +14,12 @@ protocol MainVCDelegate: AnyObject {
 class MainVC: UIViewController {
     
     let padding: CGFloat = 60
+    var hasCardsToStudy: Bool?
     
     let readyLabel  = VVLabel()
     let studyButton = VVButton()
-//    let checkButton = VVButton()
-//    let studyContainerVC = StudyContainerVC()
     
     weak var delegate: MainVCDelegate?
-    weak var studyDelegate: StudyContainerVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,13 +28,16 @@ class MainVC: UIViewController {
         checkReadyCards()
         configureReadyLabel()
         configureStudyButton()
-//        configureCheckButton()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        let timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//
+//    }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        checkReadyCards()
+        let timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(handleTimer), userInfo: nil, repeats: true)
     }
     
     func checkReadyCards() {
@@ -61,7 +62,25 @@ class MainVC: UIViewController {
         }
         readyLabel.text = "\(Data.shared.readyCards.count)"
         
-        
+        if Data.shared.readyCards.count > 0 {
+            hasCardsToStudy = true
+            toggleButtonState(when: hasCardsToStudy!)
+        } else {
+            hasCardsToStudy = false
+            toggleButtonState(when: hasCardsToStudy!)
+        }
+    }
+    
+    func toggleButtonState(when State: Bool) {
+        if State {
+            studyButton.backgroundColor = .systemGreen
+            studyButton.setTitle("begin studying", for: .normal)
+            studyButton.isEnabled = true
+        } else {
+            studyButton.backgroundColor = .systemGray4
+            studyButton.setTitle("no cards to study!", for: .disabled)
+            studyButton.isEnabled = false
+        }
     }
     
     @objc func handleTimer() {
@@ -74,11 +93,6 @@ extension MainVC {
     @objc func studyButtonClicked() {
         delegate?.didPressStudyButton()
     }
-    
-    @objc func checkButtonClicked() {
-        checkReadyCards()
-        studyDelegate?.resetStudyCards()
-    }
 }
 
 // MARK: Configuration ---
@@ -86,7 +100,6 @@ extension MainVC {
     func configureReadyLabel() {
         view.addSubview(readyLabel)
         
-//        readyLabel.backgroundColor = .systemGray
         readyLabel.font = .systemFont(ofSize: 50)
         
         readyLabelConstraints()
@@ -101,16 +114,6 @@ extension MainVC {
         
         studyButtonConstraints()
     }
-    
-//    func configureCheckButton() {
-//        view.addSubview(checkButton)
-//
-//        checkButton.setTitle("check readiness", for: .normal)
-//        checkButton.addTarget(self, action: #selector(checkButtonClicked), for: .touchUpInside)
-//        checkButton.backgroundColor = .systemPurple
-//
-//        checkButtonConstraints()
-//    }
 }
 
 // MARK: Constraints ---
@@ -132,13 +135,4 @@ extension MainVC {
             studyButton.heightAnchor.constraint(equalToConstant: 60)
         ])
     }
-    
-//    func checkButtonConstraints() {
-//        NSLayoutConstraint.activate([
-//            checkButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: padding),
-//            checkButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
-//            checkButton.topAnchor.constraint(equalTo: studyButton.bottomAnchor, constant: padding),
-//            checkButton.heightAnchor.constraint(equalToConstant: 60)
-//        ])
-//    }
 }

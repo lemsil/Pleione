@@ -17,17 +17,16 @@ class NavVC: UINavigationController {
         super.viewDidLoad()
         pushViewController(mainVC, animated: false)
         
-        mainVC.delegate = self
-        studyVC.delegate = self
-        studyContainerVC.delegate = self
-        mainVC.studyDelegate = self
-        
+        mainVC.delegate             = self
+        studyVC.delegate            = self
+        studyContainerVC.delegate   = self
     }
 }
 
 
 extension NavVC: MainVCDelegate {
     func didPressStudyButton() {
+        // if there are cards, do something here or if there aren't dont do anything
         pushViewController(studyContainerVC, animated: true)
     }
 }
@@ -41,9 +40,7 @@ extension NavVC: StudyVCDelegate {
 
 
 extension NavVC: StudyContainerVCDelegate {
-    func resetStudyCards() {
-        print("butt")
-//        studyContainerVC.resetCardViews()
-        
+    func finishedStudying() {
+        popViewController(animated: true)
     }
 }

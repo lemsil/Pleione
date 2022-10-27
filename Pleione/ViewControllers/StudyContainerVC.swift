@@ -8,10 +8,10 @@
 import UIKit
 
 protocol StudyContainerVCDelegate: AnyObject {
-    func resetStudyCards()
+    func finishedStudying()
 }
 
-class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
+class StudyContainerVC: UIViewController {
     
     var cardIndex       = 0
     let countLabel      = VVLabel()
@@ -25,6 +25,7 @@ class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
     let stackView       = UIStackView()
     let mainVC          = MainVC()
     
+    weak var delegate: StudyContainerVCDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,18 +34,13 @@ class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
         configureItems()
         activateConstraints()
         setQuestionAndAnswerText()
-        
-//        mainVC.studyDelegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("view will appear")
         if Data.shared.readyCards.count > 0 {
             resetCardViews()
         }
     }
-    
-    weak var delegate: StudyContainerVCDelegate?
     
     func setQuestionAndAnswerText() {
         questionLabel.text  = Data.shared.readyCards[cardIndex].question
@@ -61,20 +57,18 @@ class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
     }
     
     func showFinishedStudyingMessage() {
-        DispatchQueue.main.async {
-            self.countLabel.alpha       = 0
-            self.questionLabel.alpha    = 0
-            self.answerLabel.alpha      = 0
-            self.answerButton.alpha     = 0
-            self.doneLabel.alpha        = 1
-        }
+//        DispatchQueue.main.async {
+//            self.countLabel.alpha       = 0
+//            self.questionLabel.alpha    = 0
+//            self.answerLabel.alpha      = 0
+//            self.answerButton.alpha     = 0
+//            self.doneLabel.alpha        = 1
+//        }
+        self.delegate?.finishedStudying()
     }
     
     func moveToNextCard() {
         DispatchQueue.main.async {
-            self.answerButton.isHidden   = false
-            self.stackView.isHidden      = true
-            
             if Data.shared.readyCards.count > 0 {
                 self.answerLabel.alpha = 0
                 self.setQuestionAndAnswerText()
@@ -82,13 +76,8 @@ class StudyContainerVC: UIViewController, StudyContainerVCDelegate {
                 self.showFinishedStudyingMessage()
             }
             
-//            if (self.cardIndex < Data.shared.readyCards.count - 1) {
-//                self.answerLabel.alpha = 0
-////                self.cardIndex += 1
-//                self.setQuestionAndAnswerText()
-//            } else if (self.cardIndex == Data.shared.readyCards.count - 1) {
-//                self.showFinishedStudyingMessage()
-//            }
+            self.answerButton.isHidden   = false
+            self.stackView.isHidden      = true
         }
     }
 }
@@ -173,18 +162,11 @@ extension StudyContainerVC {
         
         Data.shared.cards.append(Data.shared.readyCards[cardIndex])
         Data.shared.readyCards.remove(at: cardIndex)
-//        cardIndex -= 1
         
         moveToNextCard()
     }
 }
 
-// MARK: Protocols ---
-extension StudyContainerVC {
-    func resetStudyCards() {
-        print("butt")
-    }
-}
 
 // MARK: Constraints ---
 extension StudyContainerVC {
