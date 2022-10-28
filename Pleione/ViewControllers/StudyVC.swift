@@ -14,16 +14,14 @@ protocol StudyVCDelegate: AnyObject {
 class StudyVC: UIViewController {
     
     var cardIndex       = 0
+    let mainVC          = MainVC()
     let countLabel      = VVLabel()
     let questionLabel   = VVLabel()
     let answerLabel     = VVLabel()
-    let doneLabel       = VVLabel()
-    let readyLabel      = VVLabel()
     let answerButton    = VVButton()
     let againButton     = VVButton()
     let successButton   = VVButton()
     let stackView       = UIStackView()
-    let mainVC          = MainVC()
     
     weak var delegate: StudyVCDelegate?
     
@@ -39,6 +37,7 @@ class StudyVC: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         if Data.shared.readyCards.count > 0 {
             resetCardViews()
+            updateRemainingCards()
         }
     }
     
@@ -50,10 +49,9 @@ class StudyVC: UIViewController {
     func resetCardViews() {
         questionLabel.text  = Data.shared.readyCards[cardIndex].question
         answerLabel.text    = Data.shared.readyCards[cardIndex].answer
+        countLabel.alpha    = 1
         questionLabel.alpha = 1
         answerLabel.alpha   = 0
-        doneLabel.alpha     = 0
-        countLabel.alpha    = 1
         answerButton.alpha  = 1
     }
     
@@ -70,6 +68,10 @@ class StudyVC: UIViewController {
             self.stackView.isHidden      = true
         }
     }
+    
+    func updateRemainingCards() {
+        self.countLabel.text = "\(Data.shared.readyCards.count)"
+    }
 }
 
 // MARK: Configuration ---
@@ -78,24 +80,17 @@ extension StudyVC {
         view.addSubview(countLabel)
         view.addSubview(questionLabel)
         view.addSubview(answerLabel)
-        view.addSubview(doneLabel)
         view.addSubview(answerButton)
-        view.addSubview(againButton)
-        view.addSubview(successButton)
         view.addSubview(stackView)
-        view.addSubview(readyLabel)
         
         // Labels
-        countLabel.text         = "5"
-        doneLabel.text          = "You finished studying for now!"
-        doneLabel.textAlignment = .center
-        doneLabel.alpha         = 0
+        updateRemainingCards()
         answerLabel.alpha       = 0
         
         // Answer button
         answerButton.setTitle("show answer", for: .normal)
         answerButton.addTarget(self, action: #selector(showAnswerButtonPressed), for: .touchUpInside)
-        answerButton.alpha      = 1
+        answerButton.alpha = 1
         
         // Again button
         againButton.setTitle("again", for: .normal)
@@ -144,8 +139,8 @@ extension StudyVC {
     }
         
     @objc func successButtonPressed() {
-        self.answerButton.isHidden   = false
-        self.stackView.isHidden      = true
+        self.answerButton.isHidden  = false
+        self.stackView.isHidden     = true
         
         if Data.shared.readyCards[cardIndex].familiarity < 5 {
             Data.shared.readyCards[cardIndex].familiarity    += 1
@@ -170,6 +165,8 @@ extension StudyVC {
         
         Data.shared.cards.append(Data.shared.readyCards[cardIndex])
         Data.shared.readyCards.remove(at: cardIndex)
+        
+        updateRemainingCards()
         
         moveToNextCard()
     }
@@ -199,11 +196,6 @@ extension StudyVC {
             answerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             answerButton.widthAnchor.constraint(equalToConstant: 200),
             answerButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            doneLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            doneLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-            doneLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
-            doneLabel.heightAnchor.constraint(equalToConstant: 200),
             
             stackView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50),
             stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),

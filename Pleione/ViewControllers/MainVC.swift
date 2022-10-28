@@ -62,6 +62,7 @@ class MainVC: UIViewController {
         }
         
         indexArray = indexArray.reversed()
+        
         for index in indexArray {
             Data.shared.cards.remove(at: index)
         }
@@ -120,19 +121,13 @@ extension MainVC {
     }
     
     func configureExploreButton() {
-        view.addSubview(exploreButton)
-        
         exploreButton.setTitle("Explore", for: .normal)
         exploreButton.addTarget(self, action: #selector(exploreButtonClicked), for: .touchUpInside)
     }
     
     func configureStudyButton() {
-        view.addSubview(studyButton)
-        
         studyButton.setTitle("Study", for: .normal)
         studyButton.addTarget(self, action: #selector(studyButtonClicked), for: .touchUpInside)
-        
-//        studyButtonConstraints()
     }
     
     func configureStackView() {
