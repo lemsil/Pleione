@@ -8,8 +8,8 @@
 import Foundation
 
 struct Card {
-    var question:       String
-    var answer:         String
-    var familiarity:    Int
-    var cooldown:       Date?
+  var question:       String
+  var answer:         String
+  var familiarity:    Int
+  var cooldown:       Date?
 }
