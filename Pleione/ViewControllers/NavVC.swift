@@ -12,7 +12,7 @@ class NavVC: UINavigationController {
   let studyVC     = StudyVC()
   let mainVC      = MainVC()
   let exploreVC   = ExploreVC()
-  let detailVC    = ExploreVC()
+  let detailVC    = DetailVC()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -20,6 +20,7 @@ class NavVC: UINavigationController {
     
     mainVC.delegate     = self
     studyVC.delegate    = self
+    exploreVC.delegate  = self
   }
 }
 
@@ -41,7 +42,8 @@ extension NavVC: StudyVCDelegate {
 }
 
 extension NavVC: ExploreVCDelegate {
-  func didSelectBody() {
+  func didSelectBody(at BodyIndex: Int) {
+    detailVC.bodyIndex = BodyIndex
     pushViewController(detailVC, animated: true)
   }
 }

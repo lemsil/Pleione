@@ -8,7 +8,7 @@
 import UIKit
 
 protocol ExploreVCDelegate: AnyObject {
-  func didSelectBody()
+  func didSelectBody(at BodyIndex: Int)
 }
 
 class ExploreVC: UIViewController {
@@ -25,8 +25,17 @@ class ExploreVC: UIViewController {
     super.viewDidLoad()
     
     view.backgroundColor = .systemGray3
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(bodyTapped))
+    
+    view.addGestureRecognizer(tapGesture)
     
     configureViews()
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    switchInNewBody(atIndex: bodyIndex)
   }
   
   // MARK: Logic ---
@@ -35,14 +44,16 @@ class ExploreVC: UIViewController {
   }
   
   func switchOutOldBody(atIndex index: Int) {
-    Data.shared.bodyViews[index].removeFromSuperview()
+    currentBodyView?.removeFromSuperview()
   }
   
   func switchInNewBody(atIndex index: Int) {
-    view.addSubview(Data.shared.bodyViews[index])
+    currentBodyView = Data.shared.bodyViews[index]
+    view.addSubview(currentBodyView!)
     
-    activateBodyConstraints(of: Data.shared.bodyViews[index])
+    activateBodyConstraints(of: currentBodyView!)
   }
+  
 }
 
 // MARK: Configuration ---
@@ -61,10 +72,11 @@ extension ExploreVC {
     
     activateButtonConstraints()
     switchInNewBody(atIndex: bodyIndex)
+    
   }
 }
 
-// MARK: Buttons ---
+// MARK: Buttons and Taps ---
 extension ExploreVC {
   @objc func prevButtonPressed() {
     if bodyIndex >= 1 {
@@ -84,6 +96,10 @@ extension ExploreVC {
       
       switchInNewBody(atIndex: bodyIndex)
     }
+  }
+  
+  @objc func bodyTapped() {
+    delegate?.didSelectBody(at: bodyIndex)
   }
 }
 
@@ -107,7 +123,10 @@ extension ExploreVC {
     NSLayoutConstraint.activate([
       bodyView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
       bodyView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      bodyView.heightAnchor.constraint(equalToConstant: 230),
+      bodyView.widthAnchor.constraint(equalToConstant: 230)
     ])
+    bodyView.layer.cornerRadius = 115
   }
 }
 

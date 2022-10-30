@@ -8,8 +8,7 @@
 import UIKit
 class BodyView: UIView {
   override init(frame: CGRect) {
-    
-    bodySize = 1
+    name = "name"
     
     super.init(frame: frame)
   }
@@ -18,21 +17,15 @@ class BodyView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  
-  init(_ size: Int, _ color: UIColor) {
-    bodySize = size
+  init(_ named: String, _ color: UIColor) {
+    name = named
     
-    super.init(frame: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
-  
+    super.init(frame: .zero)
+    
     backgroundColor     = color
-    layer.cornerRadius  = CGFloat(size / 2)
     
     translatesAutoresizingMaskIntoConstraints = false
   }
   
-  var bodySize: Int
-  
-  override var intrinsicContentSize: CGSize {
-    return CGSize(width: bodySize, height: bodySize)
-  }
+  var name: String
 }

@@ -16,14 +16,25 @@ struct Data {
   
   var readyCards: [Card] = []
   
-  let bodyViews: [BodyView] = [
-    BodyView(85,  .systemGray),
-    BodyView(160, .systemYellow),
-    BodyView(160, .systemGreen),
-    BodyView(110, .systemRed),
-    BodyView(250, .systemOrange),
-    BodyView(225, .systemBrown),
-    BodyView(190, .systemTeal),
-    BodyView(200, .systemCyan)
+  let bodyViews = [
+    BodyView("Mercury", .systemGray)  ,
+    BodyView("Venus", .systemYellow) ,
+    BodyView("Earth", .systemGreen)  ,
+    BodyView("Mars", .systemRed)  ,
+    BodyView("Jupiter", .systemOrange) ,
+    BodyView("Saturn", .systemBrown) ,
+    BodyView("Uranus", .systemTeal),
+    BodyView("Neptune", .systemCyan)
+  ]
+  
+  let detailBodyViews = [
+    BodyView("Mercury", .systemGray)  ,
+    BodyView("Venus", .systemYellow) ,
+    BodyView("Earth", .systemGreen)  ,
+    BodyView("Mars", .systemRed)  ,
+    BodyView("Jupiter", .systemOrange) ,
+    BodyView("Saturn", .systemBrown) ,
+    BodyView("Uranus", .systemTeal),
+    BodyView("Neptune", .systemCyan)
   ]
 }
