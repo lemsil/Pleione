@@ -21,6 +21,7 @@ class StudyVC: UIViewController {
   let answerButton    = VVButton()
   let againButton     = VVButton()
   let successButton   = VVButton()
+  let removeButton    = VVButton()
   let stackView       = UIStackView()
   
   weak var delegate: StudyVCDelegate?
@@ -41,6 +42,7 @@ class StudyVC: UIViewController {
     }
   }
   
+  // MARK: Logic ---
   func setQuestionAndAnswerText() {
     questionLabel.text  = Data.shared.readyCards[cardIndex].question
     answerLabel.text    = Data.shared.readyCards[cardIndex].answer
@@ -77,6 +79,7 @@ class StudyVC: UIViewController {
 // MARK: Configuration ---
 extension StudyVC {
   func configureItems() {
+    view.addSubview(removeButton)
     view.addSubview(countLabel)
     view.addSubview(questionLabel)
     view.addSubview(answerLabel)
@@ -86,6 +89,10 @@ extension StudyVC {
     // Labels
     updateRemainingCards()
     answerLabel.alpha       = 0
+    
+    // Remove button
+    removeButton.setTitle("X", for: .normal)
+    removeButton.addTarget(self, action: #selector(removeButtonPressed), for: .touchUpInside)
     
     // Answer button
     answerButton.setTitle("show answer", for: .normal)
@@ -116,6 +123,16 @@ extension StudyVC {
 
 // MARK: Button presses ---
 extension StudyVC {
+  @objc func removeButtonPressed() {
+    Data.shared.readyCards[cardIndex].added = false
+    
+    Data.shared.cards.append(Data.shared.readyCards[cardIndex])
+    Data.shared.readyCards.remove(at: cardIndex)
+    
+    updateRemainingCards()
+    moveToNextCard()
+  }
+  
   @objc func showAnswerButtonPressed() {
     DispatchQueue.main.async {
       self.answerButton.isHidden   = true
@@ -177,10 +194,15 @@ extension StudyVC {
 extension StudyVC {
   func activateConstraints() {
     NSLayoutConstraint.activate([
+      removeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 55),
+      removeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -35),
+      removeButton.widthAnchor.constraint(equalToConstant: 65),
+      removeButton.heightAnchor.constraint(equalToConstant: 65),
+      
       countLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 150),
-      countLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),
-      countLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50),
+      countLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       countLabel.heightAnchor.constraint(equalToConstant: 100),
+      countLabel.widthAnchor.constraint(equalToConstant: 100),
       
       questionLabel.topAnchor.constraint(equalTo: countLabel.bottomAnchor, constant: 50),
       questionLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50),

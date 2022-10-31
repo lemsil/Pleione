@@ -19,7 +19,8 @@ class DetailVC: UIViewController {
     
     view.backgroundColor = .systemGray6
     
-    headerBody = Data.shared.detailBodyViews[bodyIndex!]
+//    headerBody = Data.shared.SSOs[bodyIndex!][0].detailView
+    headerBody = Data.shared.planetsAndStructures[bodyIndex!].detailView
     headerBody!.layer.cornerRadius = 100
     view.addSubview(headerBody!)
     
@@ -29,7 +30,7 @@ class DetailVC: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    headerBody = Data.shared.detailBodyViews[bodyIndex!]
+    headerBody = Data.shared.planetsAndStructures[bodyIndex!].detailView
     headerBody!.layer.cornerRadius = 100
     view.addSubview(headerBody!)
     

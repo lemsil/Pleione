@@ -23,6 +23,8 @@
 		6C79326B29049949009DA43C /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C79326A29049949009DA43C /* Card.swift */; };
 		6C79326D2907A4FC009DA43C /* CardSetup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C79326C2907A4FC009DA43C /* CardSetup.swift */; };
 		6C9673AF290C84520054C236 /* BodyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C9673AE290C84520054C236 /* BodyView.swift */; };
+		6CD53C96290F2BB800A0FE9F /* VVObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD53C95290F2BB800A0FE9F /* VVObject.swift */; };
+		6CD53C98290F2E2900A0FE9F /* Fact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD53C97290F2E2900A0FE9F /* Fact.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +46,8 @@
 		6C79326A29049949009DA43C /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		6C79326C2907A4FC009DA43C /* CardSetup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardSetup.swift; sourceTree = "<group>"; };
 		6C9673AE290C84520054C236 /* BodyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BodyView.swift; sourceTree = "<group>"; };
+		6CD53C95290F2BB800A0FE9F /* VVObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VVObject.swift; sourceTree = "<group>"; };
+		6CD53C97290F2E2900A0FE9F /* Fact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fact.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +129,8 @@
 			children = (
 				6C7932682903902B009DA43C /* Data.swift */,
 				6C79326A29049949009DA43C /* Card.swift */,
+				6CD53C95290F2BB800A0FE9F /* VVObject.swift */,
+				6CD53C97290F2E2900A0FE9F /* Fact.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -202,12 +208,14 @@
 				6C451A0528EF911B009F0849 /* MainVC.swift in Sources */,
 				6C7932692903902B009DA43C /* Data.swift in Sources */,
 				6C451A1728EFA793009F0849 /* NavVC.swift in Sources */,
+				6CD53C98290F2E2900A0FE9F /* Fact.swift in Sources */,
 				6C451A1528EFA0F4009F0849 /* VVButton.swift in Sources */,
 				6C451A0128EF911B009F0849 /* AppDelegate.swift in Sources */,
 				6C793261290364CF009DA43C /* StudyVC.swift in Sources */,
 				6C2BEAC8290B37CB00FE3DD8 /* ExploreVC.swift in Sources */,
 				6C451A1F28EFB3DF009F0849 /* CardVC.swift in Sources */,
 				6C451A0328EF911B009F0849 /* SceneDelegate.swift in Sources */,
+				6CD53C96290F2BB800A0FE9F /* VVObject.swift in Sources */,
 				6C9673AF290C84520054C236 /* BodyView.swift in Sources */,
 				6C79326D2907A4FC009DA43C /* CardSetup.swift in Sources */,
 				6C79326529036C90009DA43C /* VVLabel.swift in Sources */,

@@ -8,8 +8,6 @@
 import UIKit
 class BodyView: UIView {
   override init(frame: CGRect) {
-    name = "name"
-    
     super.init(frame: frame)
   }
   
@@ -17,8 +15,7 @@ class BodyView: UIView {
     fatalError("init(coder:) has not been implemented")
   }
   
-  init(_ named: String, _ color: UIColor) {
-    name = named
+  init(colored color: UIColor) {
     
     super.init(frame: .zero)
     
@@ -26,6 +23,4 @@ class BodyView: UIView {
     
     translatesAutoresizingMaskIntoConstraints = false
   }
-  
-  var name: String
 }

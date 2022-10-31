@@ -12,4 +12,6 @@ struct Card {
   var answer:         String
   var familiarity:    Int
   var cooldown:       Date?
+  var cardIndex:      Int?
+  var added:          Bool
 }

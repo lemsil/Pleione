@@ -48,7 +48,7 @@ class ExploreVC: UIViewController {
   }
   
   func switchInNewBody(atIndex index: Int) {
-    currentBodyView = Data.shared.bodyViews[index]
+    currentBodyView = Data.shared.planetsAndStructures[index].exploreView
     view.addSubview(currentBodyView!)
     
     activateBodyConstraints(of: currentBodyView!)
@@ -89,7 +89,7 @@ extension ExploreVC {
   }
   
   @objc func nextButtonPressed() {
-    if bodyIndex <= Data.shared.bodyViews.count - 2 {
+    if bodyIndex <= Data.shared.planetsAndStructures.count - 2 {
       switchOutOldBody(atIndex: bodyIndex)
       
       bodyIndex += 1

@@ -34,6 +34,8 @@ class MainVC: UIViewController {
     configureExploreButton()
     configureStudyButton()
     configureStackView()
+    
+    initializeSSOArray()
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -55,7 +57,7 @@ class MainVC: UIViewController {
         }
       }
       
-      if card.cooldown == nil {
+      if card.cooldown == nil && card.added == true {
         Data.shared.readyCards.append(Data.shared.cards[index])
         indexArray.append(index)
       }
@@ -163,5 +165,28 @@ extension MainVC {
       stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -padding),
       stackView.heightAnchor.constraint(equalToConstant: 140)
     ])
+  }
+}
+
+// MARK: Initialize Array ---
+extension MainVC {
+  func initializeSSOArray() {
+    Data.shared.planetsAndStructures = [
+      Data.shared.mercury,
+      Data.shared.venus,
+      Data.shared.earth,
+      Data.shared.mars,
+      Data.shared.jupiter,
+      Data.shared.saturn,
+      Data.shared.uranus,
+      Data.shared.neptune
+    ]
+    
+    Data.shared.moonCatalogue["Earth"] = [Data.shared.moon]
+    Data.shared.moonCatalogue["Mars"] = [Data.shared.phobos, Data.shared.deimos]
+    Data.shared.moonCatalogue["Jupiter"] = [Data.shared.io, Data.shared.europa, Data.shared.ganymede, Data.shared.callisto]
+    Data.shared.moonCatalogue["Saturn"] = [Data.shared.mimas, Data.shared.enceladus, Data.shared.tethys, Data.shared.dione, Data.shared.rhea, Data.shared.rhea, Data.shared.titan, Data.shared.iapetus]
+    Data.shared.moonCatalogue["Uranus"] = [Data.shared.miranda, Data.shared.ariel, Data.shared.umbriel, Data.shared.titania, Data.shared.oberon]
+    Data.shared.moonCatalogue["Neptune"] = [Data.shared.triton]
   }
 }
